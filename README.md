@@ -98,6 +98,7 @@ form structure           passed   form check: ok (47 objects, 26 attribute metho
 form schema              passed   instance Project/Sources/Forms/Lab/form.4DForm: ok
 4D compilation           passed   success True · targets native
 component self test      passed   30 checks, component 0.1.2 macOS-universal
+example artifacts        passed   4 SVGs regenerated from the component
 static form preview      passed   Docs/assets/form-static.png
 ```
 
@@ -113,7 +114,7 @@ component `0.1.2` / `macOS-universal`):
 | Form schema + wiring | **passed** | `tools/4dform/boon`, `scripts/check_form.py` |
 | The form definition loads | **passed** | `FORM LOAD("Lab")` under a local error handler |
 | Annotated SVG is well-formed | **passed** | `DOM Parse XML variable` inside the demo, re-checked with Python |
-| Example SVGs | **passed** | `Demo_Examples` → `Docs/examples/` |
+| Example SVGs (`Docs/examples/`) | **passed** | `Demo_Examples`, asserted by `smoke.sh`; byte-identical to the committed files |
 | The window itself (dialog, picture rendering, mouse) | **not_run** | `tool4d` has no GUI; open the project in 4D and run `Demo_Start` |
 | `SVG EXPORT TO PICTURE` preview | **not_run** | the command is unavailable under `tool4d`, so `Form.lab.preview` stays empty there |
 | Windows 4D, Intel 4D | **not_run** | not available on this host — `FontScanner` has a Windows branch that was never executed |

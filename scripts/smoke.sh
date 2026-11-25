@@ -96,6 +96,25 @@ else
   row failed "component self test" "tool4d exited nonzero, see $OUT/selftest.log"
 fi
 
+# ------------------------------------------------------- example artifacts
+rm -f "$OUT/examples/index.json"
+if run4d Demo_Examples > "$OUT/examples.log" 2>&1 &&
+   python3 - "$OUT/examples/index.json" <<'PY'
+import json, sys
+report = json.load(open(sys.argv[1]))
+cases = report["cases"]
+bad = [c["name"] for c in cases if not c["ok"] or not c["glyphCount"]]
+for name in bad:
+    print("FAIL %s" % name)
+print("%d/%d cases shaped, component %s" % (len(cases) - len(bad), len(cases), report["component"]))
+sys.exit(0 if len(cases) == 4 and not bad else 1)
+PY
+then
+  row passed "example artifacts" "4 SVGs regenerated from the component"
+else
+  row failed "example artifacts" "see $OUT/examples.log"
+fi
+
 # ------------------------------------------------------- static form preview
 if [ -x tools/4dform/fourdform ] &&
    tools/4dform/fourdform --output Docs/assets/form-static.png --scale 1 \
