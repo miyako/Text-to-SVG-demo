@@ -115,6 +115,7 @@ component `0.1.2` / `macOS-universal`):
 | The form definition loads | **passed** | `FORM LOAD("Lab")` under a local error handler |
 | Annotated SVG is well-formed | **passed** | `DOM Parse XML variable` inside the demo, re-checked with Python |
 | Example SVGs (`Docs/examples/`) | **passed** | `Demo_Examples`, asserted by `smoke.sh`; byte-identical to the committed files |
+| `scripts/install_component.sh` | **passed** | from an empty `Components/`: 35 entries, executable bit restored, same bytes as the manual install, smoke green |
 | The window itself (dialog, picture rendering, mouse) | **not_run** | `tool4d` has no GUI; open the project in 4D and run `Demo_Start` |
 | `SVG EXPORT TO PICTURE` preview | **not_run** | the command is unavailable under `tool4d`, so `Form.lab.preview` stays empty there |
 | Windows 4D, Intel 4D | **not_run** | not available on this host — `FontScanner` has a Windows branch that was never executed |

@@ -24,6 +24,10 @@ PY
 echo "component: $REPO @ $VERSION"
 
 DEST="$ROOT/Components"
+case "$DEST" in
+  "$ROOT"/*) ;;
+  *) echo "refusing to write outside the repository: $DEST" >&2; exit 1 ;;
+esac
 if [ -d "$DEST/Text-to-SVG.4dbase" ] && [ "${1:-}" != "--force" ]; then
   echo "already installed: $DEST/Text-to-SVG.4dbase (use --force to replace)"
   exit 0
