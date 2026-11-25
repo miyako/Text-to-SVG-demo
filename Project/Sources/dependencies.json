@@ -1,0 +1,8 @@
+{
+    "dependencies": {
+        "Text-to-SVG": {
+            "github": "miyako/Text-to-SVG",
+            "version": "0.1.2"
+        }
+    }
+}

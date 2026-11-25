@@ -1,0 +1,714 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"windowTitle": "Text-to-SVG Lab",
+	"destination": "detailScreen",
+	"width": 1180,
+	"height": 840,
+	"rightMargin": 20,
+	"bottomMargin": 20,
+	"windowSizingX": "fixed",
+	"windowSizingY": "fixed",
+	"windowMinWidth": 1180,
+	"windowMinHeight": 840,
+	"windowMaxWidth": 1180,
+	"windowMaxHeight": 840,
+	"events": [
+		"onLoad",
+		"onUnload"
+	],
+	"method": "method.4dm",
+	"pages": [
+		{
+			"objects": {}
+		},
+		{
+			"objects": {
+				"title": {
+					"type": "text",
+					"left": 28,
+					"top": 16,
+					"width": 540,
+					"height": 40,
+					"text": "Text-to-SVG",
+					"fontFamily": "Arial",
+					"fontSize": 27,
+					"stroke": "#101828",
+					"fontWeight": "bold"
+				},
+				"subtitle": {
+					"type": "text",
+					"left": 28,
+					"top": 58,
+					"width": 660,
+					"height": 20,
+					"text": "glyph outlines → SVG from a 4D component · every number in physical units",
+					"fontFamily": "Arial",
+					"fontSize": 13,
+					"stroke": "#5b6478"
+				},
+				"versionText": {
+					"type": "input",
+					"left": 700,
+					"top": 22,
+					"width": 452,
+					"height": 18,
+					"dataSource": "Form.versionText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"stroke": "#8a94a6",
+					"multiline": "no",
+					"textAlign": "right"
+				},
+				"statusText": {
+					"type": "input",
+					"left": 700,
+					"top": 42,
+					"width": 452,
+					"height": 18,
+					"dataSource": "Form.statusText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"stroke": "#0f766e",
+					"multiline": "no",
+					"textAlign": "right"
+				},
+				"labelFont": {
+					"type": "text",
+					"left": 28,
+					"top": 94,
+					"width": 240,
+					"height": 14,
+					"text": "FONT FILE",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"fontWeight": "bold"
+				},
+				"fontDrop": {
+					"type": "dropdown",
+					"left": 28,
+					"top": 110,
+					"width": 356,
+					"height": 22,
+					"dataSource": "Form.fontDrop",
+					"dataSourceTypeHint": "object",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/fontDrop.4dm",
+					"events": [
+						"onDataChange"
+					]
+				},
+				"fontPathText": {
+					"type": "input",
+					"left": 28,
+					"top": 138,
+					"width": 356,
+					"height": 18,
+					"dataSource": "Form.fontPathText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Courier New",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"multiline": "no"
+				},
+				"labelFace": {
+					"type": "text",
+					"left": 28,
+					"top": 164,
+					"width": 96,
+					"height": 18,
+					"text": "Face index",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"stroke": "#5b6478"
+				},
+				"faceInput": {
+					"type": "input",
+					"left": 126,
+					"top": 162,
+					"width": 54,
+					"height": 22,
+					"dataSource": "Form.lab.faceIndex",
+					"dataSourceTypeHint": "integer",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/faceInput.4dm",
+					"events": [
+						"onDataChange"
+					],
+					"textAlign": "right"
+				},
+				"faceStep": {
+					"type": "stepper",
+					"left": 184,
+					"top": 160,
+					"width": 14,
+					"height": 26,
+					"dataSource": "Form.lab.faceIndex",
+					"method": "ObjectMethods/faceStep.4dm",
+					"events": [
+						"onDataChange"
+					]
+				},
+				"faceHint": {
+					"type": "input",
+					"left": 204,
+					"top": 164,
+					"width": 180,
+					"height": 18,
+					"dataSource": "Form.faceHint",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"multiline": "no"
+				},
+				"labelText": {
+					"type": "text",
+					"left": 28,
+					"top": 196,
+					"width": 60,
+					"height": 18,
+					"text": "Text",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"stroke": "#5b6478"
+				},
+				"textInput": {
+					"type": "input",
+					"left": 28,
+					"top": 214,
+					"width": 356,
+					"height": 30,
+					"dataSource": "Form.lab.text",
+					"dataSourceTypeHint": "text",
+					"fontFamily": "Arial",
+					"fontSize": 16,
+					"method": "ObjectMethods/textInput.4dm",
+					"events": [
+						"onDataChange"
+					]
+				},
+				"labelSize": {
+					"type": "text",
+					"left": 28,
+					"top": 256,
+					"width": 60,
+					"height": 18,
+					"text": "Size",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"stroke": "#5b6478"
+				},
+				"sizeInput": {
+					"type": "input",
+					"left": 88,
+					"top": 254,
+					"width": 64,
+					"height": 24,
+					"dataSource": "Form.lab.fontSize",
+					"dataSourceTypeHint": "number",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/sizeInput.4dm",
+					"events": [
+						"onDataChange"
+					],
+					"textAlign": "right"
+				},
+				"unitsDrop": {
+					"type": "dropdown",
+					"left": 160,
+					"top": 254,
+					"width": 80,
+					"height": 22,
+					"dataSource": "Form.lab.units",
+					"dataSourceTypeHint": "text",
+					"choiceList": [
+						"mm",
+						"pt",
+						"px",
+						"in"
+					],
+					"saveAs": "value",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/unitsDrop.4dm",
+					"events": [
+						"onDataChange"
+					]
+				},
+				"sizeHint": {
+					"type": "input",
+					"left": 248,
+					"top": 258,
+					"width": 136,
+					"height": 18,
+					"dataSource": "Form.sizeHint",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"multiline": "no"
+				},
+				"guidesCheck": {
+					"type": "checkbox",
+					"left": 28,
+					"top": 288,
+					"width": 260,
+					"height": 18,
+					"text": "Guides in the preview",
+					"dataSource": "Form.lab.showGuides",
+					"dataSourceTypeHint": "boolean",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/guidesCheck.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"labelPresets": {
+					"type": "text",
+					"left": 28,
+					"top": 320,
+					"width": 300,
+					"height": 14,
+					"text": "PRESETS — ONE CLICK EACH",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"fontWeight": "bold"
+				},
+				"preset1": {
+					"type": "button",
+					"left": 28,
+					"top": 338,
+					"width": 172,
+					"height": 26,
+					"text": "Latin · AV Office",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset1.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset2": {
+					"type": "button",
+					"left": 212,
+					"top": 338,
+					"width": 172,
+					"height": 26,
+					"text": "Ligature · office",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset2.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset3": {
+					"type": "button",
+					"left": 28,
+					"top": 370,
+					"width": 172,
+					"height": 26,
+					"text": "Ligature · ﬁle",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset3.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset4": {
+					"type": "button",
+					"left": 212,
+					"top": 370,
+					"width": 172,
+					"height": 26,
+					"text": "CJK · 日本語",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset4.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset5": {
+					"type": "button",
+					"left": 28,
+					"top": 402,
+					"width": 172,
+					"height": 26,
+					"text": "RTL · مرحبا",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset5.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset6": {
+					"type": "button",
+					"left": 212,
+					"top": 402,
+					"width": 172,
+					"height": 26,
+					"text": "Emoji font",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset6.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset7": {
+					"type": "button",
+					"left": 28,
+					"top": 434,
+					"width": 172,
+					"height": 26,
+					"text": "Missing glyph",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset7.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset8": {
+					"type": "button",
+					"left": 212,
+					"top": 434,
+					"width": 172,
+					"height": 26,
+					"text": "Empty text",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset8.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"preset9": {
+					"type": "button",
+					"left": 28,
+					"top": 466,
+					"width": 172,
+					"height": 26,
+					"text": "Bad font path",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/preset9.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"compareBtn": {
+					"type": "button",
+					"left": 212,
+					"top": 466,
+					"width": 172,
+					"height": 26,
+					"text": "Compare units",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/compareBtn.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"convertBtn": {
+					"type": "button",
+					"left": 28,
+					"top": 512,
+					"width": 110,
+					"height": 26,
+					"text": "Convert",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/convertBtn.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"saveBtn": {
+					"type": "button",
+					"left": 148,
+					"top": 512,
+					"width": 110,
+					"height": 26,
+					"text": "Save SVG",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/saveBtn.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"copyBtn": {
+					"type": "button",
+					"left": 268,
+					"top": 512,
+					"width": 116,
+					"height": 26,
+					"text": "Copy SVG",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/copyBtn.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"labelZoom": {
+					"type": "text",
+					"left": 28,
+					"top": 548,
+					"width": 52,
+					"height": 18,
+					"text": "ZOOM",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"fontWeight": "bold"
+				},
+				"zoom1": {
+					"type": "button",
+					"left": 84,
+					"top": 546,
+					"width": 50,
+					"height": 24,
+					"text": "1×",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/zoom1.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"zoom2": {
+					"type": "button",
+					"left": 140,
+					"top": 546,
+					"width": 50,
+					"height": 24,
+					"text": "2×",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/zoom2.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"zoom4": {
+					"type": "button",
+					"left": 196,
+					"top": 546,
+					"width": 50,
+					"height": 24,
+					"text": "4×",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/zoom4.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"zoom8": {
+					"type": "button",
+					"left": 252,
+					"top": 546,
+					"width": 50,
+					"height": 24,
+					"text": "8×",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/zoom8.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"resetBtn": {
+					"type": "button",
+					"left": 308,
+					"top": 546,
+					"width": 76,
+					"height": 24,
+					"text": "Reset",
+					"fontFamily": "Arial",
+					"fontSize": 12,
+					"method": "ObjectMethods/resetBtn.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"labelLog": {
+					"type": "text",
+					"left": 28,
+					"top": 578,
+					"width": 300,
+					"height": 14,
+					"text": "RECENT CALLS",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"fontWeight": "bold"
+				},
+				"logText": {
+					"type": "input",
+					"left": 28,
+					"top": 596,
+					"width": 356,
+					"height": 104,
+					"dataSource": "Form.logText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Courier New",
+					"fontSize": 11,
+					"stroke": "#5b6478",
+					"multiline": "yes",
+					"wordwrap": "normal",
+					"scrollbarVertical": "automatic"
+				},
+				"errorText": {
+					"type": "input",
+					"left": 28,
+					"top": 708,
+					"width": 356,
+					"height": 112,
+					"dataSource": "Form.errorText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Courier New",
+					"fontSize": 11,
+					"stroke": "#b42318",
+					"multiline": "yes",
+					"wordwrap": "normal",
+					"scrollbarVertical": "automatic"
+				},
+				"previewPanel": {
+					"type": "rectangle",
+					"left": 404,
+					"top": 94,
+					"width": 748,
+					"height": 424,
+					"fill": "#ffffff",
+					"stroke": "#c9d1e0",
+					"strokeWidth": 1
+				},
+				"preview": {
+					"type": "input",
+					"left": 412,
+					"top": 102,
+					"width": 732,
+					"height": 408,
+					"dataSource": "Form.lab.preview",
+					"dataSourceTypeHint": "picture",
+					"pictureFormat": "proportionalCenter",
+					"borderStyle": "none",
+					"focusable": false,
+					"dragging": "none",
+					"dropping": "none",
+					"method": "ObjectMethods/preview.4dm",
+					"events": [
+						"onClick"
+					]
+				},
+				"legend": {
+					"type": "input",
+					"left": 404,
+					"top": 524,
+					"width": 748,
+					"height": 18,
+					"dataSource": "Form.legend",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"multiline": "no"
+				},
+				"metricsText": {
+					"type": "input",
+					"left": 404,
+					"top": 546,
+					"width": 748,
+					"height": 152,
+					"dataSource": "Form.metricsText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Courier New",
+					"fontSize": 12,
+					"stroke": "#101828",
+					"multiline": "yes",
+					"wordwrap": "normal",
+					"scrollbarVertical": "automatic"
+				},
+				"panelTitle": {
+					"type": "input",
+					"left": 404,
+					"top": 702,
+					"width": 748,
+					"height": 16,
+					"dataSource": "Form.panelTitle",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Arial",
+					"fontSize": 11,
+					"stroke": "#8a94a6",
+					"multiline": "no"
+				},
+				"svgText": {
+					"type": "input",
+					"left": 404,
+					"top": 720,
+					"width": 748,
+					"height": 100,
+					"dataSource": "Form.svgText",
+					"dataSourceTypeHint": "text",
+					"enterable": false,
+					"focusable": false,
+					"borderStyle": "none",
+					"fontFamily": "Courier New",
+					"fontSize": 10,
+					"stroke": "#5b6478",
+					"multiline": "yes",
+					"wordwrap": "normal",
+					"scrollbarVertical": "automatic"
+				}
+			}
+		}
+	]
+}

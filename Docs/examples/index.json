@@ -1,0 +1,50 @@
+{
+	"component": "0.1.2",
+	"target": "macOS-universal",
+	"cases": [
+		{
+			"name": "latin",
+			"text": "AV Office",
+			"font": "Arial",
+			"units": "mm",
+			"note": "Arial, 9 glyphs, ligature-free",
+			"ok": true,
+			"glyphCount": 9,
+			"advance": 41.3134765625,
+			"bytes": 5629
+		},
+		{
+			"name": "ligature",
+			"text": "ﬁle",
+			"font": "Arial",
+			"units": "mm",
+			"note": "U+FB01 renders as one glyph",
+			"ok": true,
+			"glyphCount": 3,
+			"advance": 12.783203125,
+			"bytes": 2201
+		},
+		{
+			"name": "japanese",
+			"text": "日本語",
+			"font": "Hiragino Sans GB",
+			"units": "mm",
+			"note": "Hiragino Sans, three glyphs",
+			"ok": true,
+			"glyphCount": 3,
+			"advance": 30,
+			"bytes": 10124
+		},
+		{
+			"name": "points",
+			"text": "AV Office",
+			"font": "Arial",
+			"units": "pt",
+			"note": "same numerals, pt label",
+			"ok": true,
+			"glyphCount": 9,
+			"advance": 41.3134765625,
+			"bytes": 5629
+		}
+	]
+}
