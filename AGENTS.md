@@ -62,13 +62,17 @@ ink below the baseline, `invalid_font` versus `invalid_argument`).
 
 ## Conventions in the 4D source
 
-* `var` declarations at the top of the method or function; a `var` inside a block
-  is a syntax error.
-* `Min` / `Max` are array commands — use the `minOf` / `maxOf` helpers.
-* A `\` continuation cannot end with `\"`; use `This.q()` (or `Char(34)`).
+* `var` declarations go at the top of the method or function for readability; a
+  `var` inside a block does compile and stay block-scoped, so do not rely on
+  either habit accidentally.
+* `Min` / `Max` are array commands — use the `minOf` / `maxOf` helpers. The
+  compiler blames a bogus cast (`Impossible to cast Real to Array<Variant>`) and
+  never names the command.
 * `String(value)` is locale-formatted, and `String(value; "0.#####")` returns
   `<<<<<<<` for multi-digit values — `OutlineLab.num()` is the only sanctioned
-  formatter for SVG attributes.
+  formatter for SVG attributes. There is no third "decimal separator" argument.
+* `This.q()` / `Char(34)` is still how quotes are embedded in generated SVG; keep
+  long concatenations on one line rather than relying on `\` continuations.
 * `DOM Parse XML variable` needs a variable, never an object property path.
 * Folder constants are `fk home folder`, `fk posix path`, … — the unprefixed names
   no longer exist and fail only at runtime.

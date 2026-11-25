@@ -26,35 +26,38 @@ Verified.
 
 These compile cleanly and then fail at runtime:
 
-| Written | Runtime result |
-| --- | --- |
-| `Folder(Home folder)` | `tool4d.FiFo [2] The constant value is invalid` |
-| `Folder(Desktop folder)` | same |
-| `Folder(Windows folder)` | same |
+| Written | `Compile project` | When the method runs |
+| --- | --- | --- |
+| `Folder(Home folder)` | `success: true`, no errors | `tool4d.FiFo [2] The constant value is invalid` |
+| `Folder(Desktop folder)` | same | same |
+| `Folder(Windows folder)` | same | same |
 
-The 21 R4 constant set is the `fk`-prefixed one:
+The 21 R4/R5 constant set is the `fk`-prefixed one:
 `fk home folder`, `fk desktop folder`, `fk system folder`, `fk posix path`,
 `fk platform path`, `fk database folder`, … (confirmed by grepping
 `4D_ConstantsEN.xlf` inside the tool4d bundle). The old unprefixed names are gone.
 
-Because the failure surfaces as a generic FiFo error with no constant name, it is
-worth checking `4D_ConstantsEN.xlf` before blaming your own path handling.
+Two things make this expensive: **the compiler accepts the stale name**, so a
+green compile is not evidence, and the failure names no constant, only
+`The constant value is invalid`. If a method dies that way under
+`--startup-method`, check the constants before blaming your path handling.
 
-Verified.
+Verified: compiled clean with the bad constant present, then failed at execution.
 
-## 3. `DOM Parse XML variable` silently refuses an object property
+## 3. `DOM Parse XML variable` refuses an object property
 
 ```4d
-$dom:=DOM Parse XML variable(This.annotatedSvg)   // error 59, returns ""
+$dom:=DOM Parse XML variable(This.annotatedSvg)   // error 59
 $svg:=This.annotatedSvg
 $dom:=DOM Parse XML variable($svg)                // works
 ```
 
 The command needs a real variable; a property path raises
 `tool4d.4DRT [59] 4D was expecting a field or a variable or a parameter or an
-object` and the result is an empty string, so a naive
-`If (Length($dom)>0)` hides the failure. This is the kind of bug that only shows
-up when the picture stays blank.
+object`, and outside a `Try` block that aborts the calling method. Inside `Try`
+it is catchable but `ON ERR CALL` is *not* invoked, so a handler-based log looks
+empty while the preview stays blank — which is exactly how this looked the first
+time round.
 
 Verified. Fix: copy to a local variable first (`OutlineLab.renderPreview`).
 
@@ -149,12 +152,19 @@ Verified (the first font scan returned 0 faces).
 
 ## 9. `4D.Folder.delete()` refuses a non-empty folder
 
-`$folder.delete()` → `tool4d.xbox [651] Folder not empty`. For a scratch directory
-rebuilt on every run, use the classic command:
+`$folder.delete()` → `tool4d.xbox [651] Folder  not empty` (note the doubled space
+in the message). For a scratch directory rebuilt on every run, use the classic
+command:
 
 ```4d
 DELETE FOLDER($folder.path; Delete with contents)
 ```
+
+Fine print that cost time: the error is catchable, but it is **not** an
+`ON ERR CALL` event, and `Last errors[1]` inside the `Catch` block was itself
+empty (`-10713 Index in collection is out of range`), so a "log the caught error"
+handler hides both the original failure and its own. Write a fixed sentinel
+string from `Catch` instead.
 
 Verified.
 
@@ -169,27 +179,29 @@ $opened:=String(Open document($file.platformPath))
 
 Verified (compile error until fixed).
 
-## 11. `\` continuation breaks when the line ends in an escaped quote
+## 11. `Min` / `Max` are array commands, and the compiler will not say so
 
-```4d
-$out:=$out+"width=\""+\  // Syntax error: The type of the variable is not compatible
+`$r:=Min(1; 2)` fails `Compile project` with two diagnostics that never mention
+`Min`:
+
+```
+Impossible to cast Real to Array<Variant>.
+Invalid constant type : Real
 ```
 
-Any continuation whose final token is `\"` fails. The demo builds such strings
-with a helper instead:
-
-```4d
-Function q($value : Text) : Text
-	return Char(34)+$value+Char(34)
-```
+The demo carries `minOf` / `maxOf` helpers. Related: `var` inside an `If` or
+`For each` block **is** legal in this build (block-scoped) — that claim, which is
+in several 4D guides, did not reproduce here.
 
 Verified.
 
-## 12. `Min` / `Max` are array commands
+## 12. `String(value; format; separator)` is not an overload
 
-`Min($a; $b)` on two reals is `The type of the variable is not compatible with the
-operator`. The demo carries `minOf` / `maxOf` helpers. Also: `var` inside a block
-(`If`, `For each`) is a syntax error — declarations go at the top of the method.
+`String(41.3; "0.#####"; ".")` fails compilation with
+`At least one parameter type does not match the prototype(s) of the function
+"String"` plus `Invalid constant type : Alphanumeric`. The third argument of
+`String` is not a decimal separator, so locale-independent formatting has to be
+done by hand (`OutlineLab.num`).
 
 Verified.
 
@@ -199,7 +211,9 @@ Verified.
 | --- | --- | --- |
 | `SVG EXPORT TO PICTURE` | unavailable | `Form.lab.preview` stays `Null`; the annotated SVG is written to disk instead |
 | form windows (`DIALOG`, `Open form window`) | no GUI | the window, mouse handling and picture rendering are **not** verified here |
-| `FORM Get objects` / `FORM Convert to dynamic` | error 59 / `-10716` without a window | object-level introspection is impossible; `FORM LOAD("Lab")` is the strongest available check (and it does raise on an unknown form name) |
+| `FORM GET OBJECTS($pointers; "Lab"; "")` | error 59, `4D was expecting a variable or a parameter or a variable or a parameter or a numeric expression` | object-level introspection is impossible headlessly |
+| `FORM Convert to dynamic("Lab")` | error 59, `4D was expecting a text expression` | a form *name* is not an acceptable argument in this build |
+| `FORM LOAD("Lab"; *)` | works, no window | the strongest available headless form gate; an unknown name raises error 81 `The form was not found`, so it is a real assertion, not a no-op |
 | `Compile project` | available via a startup method | see `Demo_Compile`; exit code alone is not evidence, read the JSON |
 | `--compile` CLI switch | does not exist | always compile from 4D code |
 | environment variables (`Get environment variable`) | does not exist | `FontScanner` cannot read `%LOCALAPPDATA%`, so per-user Windows fonts are skipped (documented in the class) |
