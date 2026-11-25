@@ -8,7 +8,13 @@ The demo is deliberately a **lab**, not a screenshot: every number the component
 returns is on screen, next to the SVG it produced, next to the error it refused
 to hide.
 
-![AV Office in 10 mm, annotated by the demo](Docs/examples/latin.svg)
+![AV Office, 10 mm, as the component returns it](Docs/examples/latin.svg)
+
+`Docs/examples/` holds the component's exact output for four cases
+(`latin`, `ligature`, `japanese`, `points`) plus a `-annotated` twin of each:
+the same outlines with the grey em box, red baseline, blue advance and green
+ink box that the form draws over them. Those are the model's own output at
+100 px per unit, which is why they are wide — open one to read the geometry.
 
 ## What the form does
 
@@ -134,7 +140,7 @@ scripts/make_form.py                regenerates the form JSON deterministically
 scripts/check_form.py               geometry, method wiring and data-source checks
 scripts/install_component.sh        release ZIP → Components/ (pinned version)
 scripts/smoke.sh                    compile + self test + preview, headless
-Docs/examples/                      component output, committed as SVG so GitHub renders it
+Docs/examples/                      component output (+ annotated twins), committed as SVG
 Docs/FINDINGS.md                    the 4D/component chokepoints met while building this
 ```
 

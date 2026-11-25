@@ -36,6 +36,11 @@ For each ($case; $cases)
 	$lab.convert()
 	$file:=$folder.file($case.name+".svg")
 	$file.setText($lab.exactSvg)
+
+	// The annotated variant is what the form draws: same outlines plus the em
+	// box, baseline, advance and ink box. Kept for the README figure.
+	$lab.buildGuides()
+	$folder.file($case.name+"-annotated.svg").setText($lab.annotatedSvg)
 	$index.push(New object( \
 		"name"; $case.name; \
 		"text"; $case.text; \
