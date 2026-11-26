@@ -44,7 +44,7 @@ scripts/smoke.sh
 ```
 
 Five rows must be `passed`: form structure, form schema, 4D compilation, the
-30-check component self test, static form preview. The script writes its evidence
+33-check component self test, static form preview. The script writes its evidence
 to `/tmp/tts-demo/` (`selftest.json`, `compile.json`, `error.json` when a guarded
 call raised something).
 

@@ -68,6 +68,8 @@ If ($ok)
 		(Position("<svg"; $lab.exactSvg)=1) && (Position("mm\""; $lab.exactSvg)>0); String(Length($lab.exactSvg))+" bytes")
 	Demo_Assert($checks; "annotated SVG carries the guides"; \
 		(Position("<path"; $lab.annotatedSvg)>0) && (Position("non-scaling-stroke"; $lab.annotatedSvg)>0); String(Length($lab.annotatedSvg))+" bytes")
+	Demo_Assert($checks; "em box spans the advance, not the padded view"; \
+		(Position("x=\"0\" y=\"-10\" width=\"41.3134765625\""; $lab.annotatedSvg)>0); "em box width = advance 41.3134765625")
 	var $dom : Text
 	var $preview : Text
 	$preview:=$lab.annotatedSvg
@@ -169,12 +171,13 @@ $lab.text:="AV Office"
 $lab.fontSize:=10
 var $ladder : Text
 $ladder:=$lab.compareUnits()
+var $ladderData : Object
+$ladderData:=$lab.unitLadder()
 var $rows : Integer
-$rows:=0
-If (Position("px"; $ladder)>0)
-	$rows:=4
-End if 
-Demo_Assert($checks; "unit ladder answers for mm, pt, px and in"; ($rows=4); "4 unit rows returned")
+$rows:=$ladderData.rows.query("ok = true").length
+Demo_Assert($checks; "unit ladder answers for mm, pt, px and in"; ($rows=4) && ($ladderData.rows.length=4); String($rows)+" of 4 unit rows returned")
+Demo_Assert($checks; "unit ladder: pathData identical in every unit"; $ladderData.identical; "identical="+String($ladderData.identical))
+Demo_Assert($checks; "unit ladder: table does not invent a claim"; (Position("byte-identical"; $ladder)>0); "ladder text states the verified result")
 
 $lab.units:="mm"
 $lab.convert()

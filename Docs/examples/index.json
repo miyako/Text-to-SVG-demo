@@ -29,7 +29,7 @@
 			"text": "日本語",
 			"font": "Hiragino Sans GB",
 			"units": "mm",
-			"note": "Hiragino Sans, three glyphs",
+			"note": "Hiragino Sans GB, three glyphs",
 			"ok": true,
 			"glyphCount": 3,
 			"advance": 30,

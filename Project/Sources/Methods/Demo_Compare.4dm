@@ -1,5 +1,5 @@
 // Demo_Compare -- four component calls, one per supported unit, with the same
-// numerals. Shows that fontSize is expressed *in* the requested unit.
+// numerals. Shows that `units` is only a label: the geometry is identical in all four.
 
 var $lab : cs.OutlineLab
 $lab:=Form.lab

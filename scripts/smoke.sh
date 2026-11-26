@@ -9,7 +9,11 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
-TOOL4D="${TOOL4D:-/Applications/tool4d/tool4d/21R4/100224/tool4d.app/Contents/MacOS/tool4d}"
+# Default: the newest tool4d under /Applications/tool4d, else the pinned build.
+if [ -z "${TOOL4D:-}" ]; then
+  TOOL4D="$(ls -d /Applications/tool4d/tool4d/*/*/tool4d.app/Contents/MacOS/tool4d 2>/dev/null | sort -V | tail -1)"
+  TOOL4D="${TOOL4D:-/Applications/tool4d/tool4d/21R4/100224/tool4d.app/Contents/MacOS/tool4d}"
+fi
 OUT="/tmp/tts-demo"  # the 4D methods write here; keep both sides in sync
 mkdir -p "$OUT"
 
@@ -110,7 +114,17 @@ print("%d/%d cases shaped, component %s" % (len(cases) - len(bad), len(cases), r
 sys.exit(0 if len(cases) == 4 and not bad else 1)
 PY
 then
-  row passed "example artifacts" "4 SVGs regenerated from the component"
+  # The committed SVGs depend on the host's fonts, so a difference is reported,
+  # not fatal: it means Docs/examples/ should be refreshed on this host.
+  drift=0
+  for f in "$OUT"/examples/*.svg; do
+    cmp -s "$f" "Docs/examples/$(basename "$f")" || drift=$((drift + 1))
+  done
+  if [ "$drift" -eq 0 ]; then
+    row passed "example artifacts" "4 SVGs regenerated, identical to Docs/examples"
+  else
+    row passed "example artifacts" "4 SVGs regenerated; $drift differ from Docs/examples (host fonts or code changed)"
+  fi
 else
   row failed "example artifacts" "see $OUT/examples.log"
 fi

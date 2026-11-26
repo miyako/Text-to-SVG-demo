@@ -21,7 +21,7 @@ var $cases : Collection
 $cases:=New collection( \
 	New object("name"; "latin"; "text"; "AV Office"; "units"; "mm"; "note"; "Arial, 9 glyphs, ligature-free"); \
 	New object("name"; "ligature"; "text"; "ﬁle"; "units"; "mm"; "note"; "U+FB01 renders as one glyph"); \
-	New object("name"; "japanese"; "text"; "日本語"; "units"; "mm"; "note"; "Hiragino Sans, three glyphs"); \
+	New object("name"; "japanese"; "text"; "日本語"; "units"; "mm"; "note"; "Hiragino Sans GB, three glyphs"); \
 	New object("name"; "points"; "text"; "AV Office"; "units"; "pt"; "note"; "same numerals, pt label"))
 
 var $index : Collection

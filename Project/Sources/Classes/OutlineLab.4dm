@@ -193,8 +193,15 @@ Function preferIndex($needle : Text) : Integer
 	var $i : Integer
 	var $found : Integer
 
+	// An exact base-name match wins over a substring match, so "Arial" never
+	// resolves to "Arial Black" just because that file sorts first.
 	$found:=-1
 	If ($needle#"")
+		For ($i; 0; This.fonts.length-1)
+			If (($found<0) && (This.fonts[$i].name=$needle))
+				$found:=$i
+			End if 
+		End for 
 		For ($i; 0; This.fonts.length-1)
 			If (($found<0) && (Position($needle; This.fonts[$i].name; *)>0))
 				$found:=$i
@@ -407,7 +414,7 @@ Function buildGuides()
 	$svg:=$svg+" width="+This.q(This.num($viewWidth))+" height="+This.q(This.num($viewHeight))+" fill=\"#ffffff\"/>"
 
 	If (This.showGuides)
-		$emBox:="<rect x="+This.q("0")+" y="+This.q(This.num(-$size))+" width="+This.q(This.num($right))
+		$emBox:="<rect x="+This.q("0")+" y="+This.q(This.num(-$size))+" width="+This.q(This.num($advance))
 		$emBox:=$emBox+" height="+This.q(This.num($size))+" fill=\"none\" stroke=\"#9aa8c7\" stroke-width="+This.q($strokeW)
 		$emBox:=$emBox+" stroke-dasharray=\"1 1\" vector-effect=\"non-scaling-stroke\"/>"
 		$svg:=$svg+$emBox
@@ -541,9 +548,21 @@ Function headline() : Text
 	If (This.metrics#Null)
 		$line:=$line+" · "+String(This.metrics.glyphCount)+" glyphs · "+This.num(This.fontSize)+" "+This.units
 	Else 
-		$line:=$line+" · "+This.errorCode+" · exit "+String(This.result.exitCode)
+		$line:=$line+" · "+This.errorCode+" · exit "+This.exitCode()
 	End if 
 	return $line
+
+// Exit code of the last call, or "-" when there was no envelope at all.
+Function exitCode() : Text
+	var $code : Text
+
+	$code:="-"
+	If (This.result#Null)
+		If (This.result.exitCode#Null)
+			$code:=String(This.result.exitCode)
+		End if 
+	End if 
+	return $code
 
 Function logText() : Text
 	return This.logLines.join(Char(13))
@@ -564,50 +583,72 @@ Function appendLog()
 
 // ------------------------------------------------------------ unit comparison
 
-Function compareUnits() : Text
+// One component call per unit, same font, same text, same numerals. `units` is
+// a *label*, not a scale: pathData, advance and inkBounds are byte-identical for
+// every unit and only the suffix of the <svg> width/height changes. Returned as
+// data so the table and the self test read the same answer.
+Function unitLadder() : Object
 	var $request : Object
 	var $response : Object
-	var $ink : Object
-	var $unitList : Collection
-	var $mm : Real
-	var $out : Text
-	var $line : Text
-	var $first : Text
 	var $unit : Text
-	var $same : Boolean
+	var $rows : Collection
+	var $row : Object
+	var $reference : Text
+	var $identical : Boolean
 
-	// The point of this table: `units` is a *label*, not a scale. The numerals
-	// inside pathData, advance and inkBounds are byte-identical for every unit;
-	// only the unit suffix of the generated <svg> width/height changes. So
-	// "10 pt" and "10 mm" are the same drawing, physically 72 dpi apart.
-	$unitList:=New collection("mm"; "pt"; "px"; "in")
-	$out:="fontSize 10 in every unit, same font and text."+Char(13)
-	$out:=$out+"The geometry never changes: units only relabel the SVG."+Char(13)+Char(13)
-	$out:=$out+"UNIT   INK WIDTH   HEIGHT     ADVANCE    1 UNIT =   SVG SUFFIX"+Char(13)
-
-	$first:=""
-	For each ($unit; $unitList)
+	$rows:=New collection
+	$reference:=""
+	$identical:=True
+	For each ($unit; New collection("mm"; "pt"; "px"; "in"))
 		$request:=New object("fontFile"; This.fontPath(); "text"; "AV Office"; "fontSize"; 10; "units"; $unit; "faceIndex"; This.faceIndex)
+		$response:=Null
 		Try
 			$response:=This.outline.convert($request)
 		Catch
 			$response:=Null
 		End try 
+		$row:=New object("unit"; $unit; "ok"; False)
 		If (($response#Null) && ($response.ok=True) && ($response.value#Null))
-			$ink:=$response.value.inkBounds
-			$mm:=This.mmPerUnit($unit)
-			$line:=$unit+"   "+This.num(Num($ink.width))+"   "+This.num(Num($ink.height))
-			$line:=$line+"   "+This.num(Num($response.value.advance.x))
-			$line:=$line+"   "+This.num($mm)+" mm"
-			$out:=$out+$line+Char(13)
+			$row.ok:=True
+			$row.inkWidth:=Num($response.value.inkBounds.width)
+			$row.inkHeight:=Num($response.value.inkBounds.height)
+			$row.advance:=Num($response.value.advance.x)
+			$row.pathData:=String($response.value.pathData)
+			$row.suffix:=Choose(Position($unit+Char(34); String($response.value.svg))>0; $unit; "?")
+			If ($reference="")
+				$reference:=$row.pathData
+			End if 
+			If ($row.pathData#$reference)
+				$identical:=False
+			End if 
 		Else 
-			$out:=$out+$unit+"   error"+Char(13)
+			$identical:=False
+		End if 
+		$rows.push($row)
+	End for each 
+	return New object("rows"; $rows; "identical"; $identical)
+
+Function compareUnits() : Text
+	var $ladder : Object
+	var $row : Object
+	var $out : Text
+
+	$ladder:=This.unitLadder()
+	$out:="fontSize 10 in every unit, same font and text."+Char(13)
+	$out:=$out+"The geometry never changes: units only relabel the SVG."+Char(13)+Char(13)
+	$out:=$out+"UNIT   INK WIDTH   HEIGHT     ADVANCE    1 UNIT =   SVG SUFFIX"+Char(13)
+	For each ($row; $ladder.rows)
+		If ($row.ok)
+			$out:=$out+$row.unit+"   "+This.num($row.inkWidth)+"   "+This.num($row.inkHeight)+"   "+This.num($row.advance)
+			$out:=$out+"   "+This.num(This.mmPerUnit($row.unit))+" mm   "+$row.suffix+Char(13)
+		Else 
+			$out:=$out+$row.unit+"   error"+Char(13)
 		End if 
 	End for each 
-
-	$same:=(Position("<svg"; This.exactSvg)>0)
-	If ($same)
-		$out:=$out+Char(13)+"The host still reports "+This.units+" because the last request in the table was in "+This.units+"."
+	If ($ladder.identical)
+		$out:=$out+Char(13)+"pathData is byte-identical in all four units."
+	Else 
+		$out:=$out+Char(13)+"pathData differs between units, or a call failed: this contradicts the documented behaviour."
 	End if 
 	return $out
 
@@ -638,7 +679,7 @@ Function presets() : Collection
 	$list.push(New object("title"; "Ligature · office"; "text"; "office"; "size"; 10; "units"; "mm"; "face"; 0; "font"; "HelveticaNeue"; \
 		"note"; "6 characters, 4 glyphs: the shaper applies the ffi ligature"))
 	$list.push(New object("title"; "Ligature · ﬁle"; "text"; "ﬁle"; "size"; 10; "units"; "mm"; "face"; 0; "font"; "HelveticaNeue"; \
-		"note"; "the fl ligature is already one character in the text"))
+		"note"; "U+FB01 (the fi ligature) is already one character: 3 characters, 3 glyphs"))
 	$list.push(New object("title"; "CJK · 日本語"; "text"; "日本語"; "size"; 10; "units"; "mm"; "face"; 0; "font"; "Hiragino Sans"; \
 		"note"; "Japanese is supported; the font must carry the glyphs"))
 	$list.push(New object("title"; "RTL · مرحبا"; "text"; "مرحبا"; "size"; 10; "units"; "mm"; "face"; 0; "font"; "Arial"; \
@@ -650,7 +691,7 @@ Function presets() : Collection
 	$list.push(New object("title"; "Empty text"; "text"; ""; "size"; 10; "units"; "mm"; "face"; 0; "font"; "Arial"; \
 		"note"; "accepted: inkBounds null, advance 0, glyphCount 0"))
 	$list.push(New object("title"; "Bad font path"; "text"; "Hi"; "size"; 10; "units"; "mm"; "face"; 0; "font"; ""; \
-		"path"; "not-a-font.ttf"; "note"; "rejected: invalid_font, a relative path never resolves"))
+		"path"; "not-a-font.ttf"; "note"; "rejected: invalid_argument, a relative path never resolves"))
 	return $list
 
 Function applyPreset($index : Integer)

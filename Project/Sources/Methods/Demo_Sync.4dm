@@ -21,10 +21,10 @@ Form.panelTitle:="RAW COMPONENT OUTPUT — value.svg ("+String(Length($lab.exact
 Form.svgText:=$lab.exactSvg
 
 If ($lab.metrics=Null)
-	Form.errorText:="FAIL "+$lab.errorCode+" · exit "+String($lab.result.exitCode)+" · "+String($lab.elapsedMs)+" ms"+Char(13)\
+	Form.errorText:="FAIL "+$lab.errorCode+" · exit "+$lab.exitCode()+" · "+String($lab.elapsedMs)+" ms"+Char(13)\
 		+$lab.errorMessage+Char(13)+Char(13)+$lab.errorHint
 Else 
-	Form.errorText:="OK · exit "+String($lab.result.exitCode)+" · "+String($lab.elapsedMs)+" ms"+Char(13)\
+	Form.errorText:="OK · exit "+$lab.exitCode()+" · "+String($lab.elapsedMs)+" ms"+Char(13)\
 		+"No error. Change a parameter, or pick a preset that is known to fail, to see the error envelope."
 End if 
 

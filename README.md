@@ -64,8 +64,8 @@ empty instead of showing a stale drawing.
    the SVG is 40.913 mm wide while `advance` is 41.313 mm: the trailing side
    bearing is outside the canvas. Place glyphs by `advance`, crop by `inkBounds`.
 5. **Character count ≠ glyph count.** `office` with HelveticaNeue is 6 characters
-   and 4 glyphs — the `ffi` ligature is real; `ﬁle` (U+FB01) is 4 characters and
-   3 glyphs. With `faceIndex` you can also prove that face 0 and face 7 of the
+   and 4 glyphs — the `ffi` ligature is real; `ﬁle` (U+FB01) is 3 characters and
+   3 glyphs, the ligature already being one character. With `faceIndex` you can also prove that face 0 and face 7 of the
    same `.ttc` differ in `pathData`.
 6. **Errors are specific.** `unsupported_layout` (Arabic refused before shaping),
    `missing_glyph` (Arial cannot render 日本語), `limit_exceeded` (Apple Color Emoji
@@ -76,7 +76,7 @@ empty instead of showing a stale drawing.
    form can re-convert on every keystroke-commit and why zooming rebuilds only
    the annotated SVG, never the component call.
 8. **Everything the demo writes is reproducible.** `scripts/smoke.sh` compiles the
-   project with `tool4d`, runs the 30-check self test and regenerates
+   project with `tool4d`, runs the 33-check self test and regenerates
    `Docs/examples/*.svg`.
 
 ## Setup
@@ -103,7 +103,7 @@ CHECK                    RESULT   DETAIL
 form structure           passed   form check: ok (47 objects, 26 attribute methods, 1180x840)
 form schema              passed   instance Project/Sources/Forms/Lab/form.4DForm: ok
 4D compilation           passed   success True · targets native
-component self test      passed   30 checks, component 0.1.2 macOS-universal
+component self test      passed   33 checks, component 0.1.2 macOS-universal
 example artifacts        passed   4 SVGs regenerated from the component
 static form preview      passed   Docs/assets/form-static.png
 ```
@@ -115,7 +115,7 @@ component `0.1.2` / `macOS-universal`):
 
 | Check | Status | How |
 | --- | --- | --- |
-| 30-check component self test | **passed** | `Demo_RunSelfTest` → `/tmp/tts-demo/selftest.json` |
+| 33-check component self test | **passed** | `Demo_RunSelfTest` → `/tmp/tts-demo/selftest.json` |
 | Full project compilation | **passed** | `Compile project`, `Demo_Compile` → `/tmp/tts-demo/compile.json` |
 | Form schema + wiring | **passed** | `tools/4dform/boon`, `scripts/check_form.py` |
 | The form definition loads | **passed** | `FORM LOAD("Lab")` under a local error handler |
